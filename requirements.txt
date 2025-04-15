@@ -1,0 +1,7 @@
+streamlit
+torch
+torchsummary
+opencv-python
+numpy
+matplotlib
+jupyter
