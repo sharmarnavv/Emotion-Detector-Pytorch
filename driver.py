@@ -4,14 +4,16 @@ import torch
 import os
 import time
 import streamlit as st
+from model import CNNModel
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-model_path = 'models/model.pth'
+model_path = 'models/newmodel.pth'
 if not os.path.exists(model_path):
     st.error("Model file not found")
     st.stop()
 try:
-    model = torch.load(model_path, map_location=device)
+    model = CNNModel(num_classes=7)
+    model.load_state_dict(torch.load(model_path, map_location=device))
     model.to(device)
     model.eval()
 except Exception as e:
@@ -68,6 +70,6 @@ if st.session_state.run:
                 cv2.putText(mirrored_frame, emotion, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 255, 255), 2)
             except Exception as e:
                 st.error(f"Error during prediction: {e}")
-        frame_placeholder.image(cv2.cvtColor(mirrored_frame, cv2.COLOR_BGR2RGB), channels="RGB", use_column_width=True)
+        frame_placeholder.image(cv2.cvtColor(mirrored_frame, cv2.COLOR_BGR2RGB), channels="RGB")
         time.sleep(0.03)
     cap.release()
